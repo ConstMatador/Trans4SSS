@@ -1,0 +1,17 @@
+{
+    "data_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/Data/Mine/gist/gist.data",
+    "log_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/MySEAnet/example/example.log",
+    "model_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/MySEAnet/example/example.pth",
+    "train_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/MySEAnet/example/data/train.data",
+    "val_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/MySEAnet/example/data/val.data",
+    "train_indices_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/MySEAnet/example/data/train_indices.data",
+    "val_indices_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/MySEAnet/example/data/val_indices.data",
+    "epoch_max": 100,
+    "device": "cuda:0",
+    "dim_series": 960,
+    "dim_embedding": 60,
+    "batch_size": 256,
+    "data_size": 1000000,
+    "train_size": 200000,
+    "val_size": 10000
+}
