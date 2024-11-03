@@ -36,7 +36,6 @@ class Experiment:
         with open('conf/example.json', 'r') as infile:
             config_data = json.load(infile)
         logging.info("Configuration from example.json: %s", json.dumps(config_data, indent=4))
-        
         logging.info(f"Experiment initialized with max epochs: {self.epoch_max} on device: {self.device}")
         
         
@@ -56,6 +55,41 @@ class Experiment:
         torch.save(self.model.state_dict(), self.model_path)
         logging.info("Model saved successfully.")
         
+    
+    def setup(self) -> None:
+        train_samples, val_samples = getSample(self.conf)
+        
+        self.train_loader = DataLoader(TSData(train_samples), batch_size = self.batch_size, shuffle = True)
+        self.train_query_loader = DataLoader(TSData(train_samples), batch_size = self.batch_size, shuffle = True)
+        self.val_loader = DataLoader(TSData(val_samples), batch_size = self.batch_size, shuffle = True)
+        self.val_query_loader = DataLoader(TSData(val_samples), batch_size = self.batch_size, shuffle = True)
+        
+        self.model = TStransformer(self.conf).to(self.device)
+        
+        # if torch.cuda.device_count() > 1:
+        #     logging.info(f"Using {torch.cuda.device_count()} GPUs with DataParallel.")
+        #     self.model = nn.DataParallel(self.model)
+        
+        if os.path.exists(self.conf.getEntry("model_path")):
+            logging.info("Model loading...")
+            self.model.load_state_dict(torch.load(self.model_path))
+        else:
+            logging.info("Model initializing...")
+            self.model = self.initModel(self.model)
+        
+        self.loss_calculator = ScaledL2Loss(self.len_series, self.len_reduce).to(self.device)
+        
+        self.optimizer = AdamW(self.model.parameters(), lr = 1e-4, weight_decay = 0.01)
+        
+        self.scheduler = LambdaLR(self.optimizer, lr_lambda = self.lr_lambda)
+        
+        self.orth_regularizer = self.conf.getEntry('orth_regularizer')
+        if self.orth_regularizer == 'srip':
+            self.srip_weight = self.conf.getEntry('srip_max')
+        
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            
     
     def train(self) -> None:
         logging.info(f'epoch: {self.epoch}, start training')
@@ -100,37 +134,6 @@ class Experiment:
     def lr_lambda(self, step):
             warmup_steps = 4000
             return min((step + 1) / warmup_steps, 1.0 / (step + 1) ** 0.5)
-        
-    
-    def setup(self) -> None:
-        train_samples, val_samples = getSample(self.conf)
-        
-        self.train_loader = DataLoader(TSData(train_samples), batch_size = self.batch_size, shuffle = True)
-        self.train_query_loader = DataLoader(TSData(train_samples), batch_size = self.batch_size, shuffle = True)
-        self.val_loader = DataLoader(TSData(val_samples), batch_size = self.batch_size, shuffle = True)
-        self.val_query_loader = DataLoader(TSData(val_samples), batch_size = self.batch_size, shuffle = True)
-        
-        self.model = TStransformer(self.conf).to(self.device)
-        
-        if os.path.exists(self.conf.getEntry("model_path")):
-            logging.info("Model loading...")
-            self.model.load_state_dict(torch.load(self.model_path))
-        else:
-            logging.info("Model initializing...")
-            self.model = self.initModel(self.model)
-        
-        self.loss_calculator = ScaledL2Loss(self.len_series, self.len_reduce).to(self.device)
-        
-        self.optimizer = AdamW(self.model.parameters(), lr = 1e-4, weight_decay = 0.01)
-        
-        self.scheduler = LambdaLR(self.optimizer, lr_lambda = self.lr_lambda)
-        
-        self.orth_regularizer = self.conf.getEntry('orth_regularizer')
-        if self.orth_regularizer == 'srip':
-            self.srip_weight = self.conf.getEntry('srip_max')
-        
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
             
         
     def initModel(self, model):

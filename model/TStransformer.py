@@ -65,7 +65,7 @@ class TStransformer(nn.Module):
         x = self.reduce(x)  # (embed_size*batch_size, len_reduce)
         #print("7", x.shape)
         
-        x = x.view(-1, self.batch_size, self.len_reduce)  # (embed_size, batch_size, len_reduce)
+        x = x.reshape(-1, self.batch_size, self.len_reduce)  # (embed_size, batch_size, len_reduce)
         #print("8", x.shape)
         
         x = x.permute(1, 2, 0)  # (batch_size, len_reduce, embed_size)

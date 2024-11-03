@@ -8,15 +8,15 @@
     "val_indices_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/LLM4SSS/example/data/val_indices.data",
 
     "epoch_max": 100,
-    "device": "cuda:0",
+    "device": "cuda:6",
     "len_series": 960,
     "len_reduce": 60,
     "dim_series": 1,
     "batch_size": 16,
     
     "data_size": 1000000,
-    "train_size": 20000,
-    "val_size": 1000,
+    "train_size": 2000,
+    "val_size": 100,
 
     "embed_size": 16,
     "num_tokens": 10000,
