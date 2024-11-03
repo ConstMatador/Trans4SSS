@@ -15,4 +15,5 @@ class ScaledL2Loss(nn.Module):
     def forward(self, one, another, one_reduce, another_reduce):
         original_l2 = self.l2(squeeze(one), squeeze(another)) / self.scale_factor_original
         reduce_l2 = self.l2(squeeze(one_reduce), squeeze(another_reduce)) / self.scale_factor_reduce
-        return self.l1(original_l2.view([1, -1]), reduce_l2.view([1, -1]))[0] / database.shape[0]
+        return self.l1(original_l2.view([1, -1]), reduce_l2.view([1, -1]))[0] / one.shape[0]
+    

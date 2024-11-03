@@ -52,8 +52,6 @@ class Experiment:
             
             self.train()
             self.validate()
-            
-            loss.backward()
 
         torch.save(self.model.state_dict(), self.model_path)
         logging.info("Model saved successfully.")
@@ -66,17 +64,20 @@ class Experiment:
             self.optimizer.zero_grad()
             
             one_batch = one_batch.to(self.device)
-            one_batch_reduce = self.model(one_batch).debach()
+            one_batch_reduce = self.model(one_batch)
             
             with torch.no_grad():
                 another_batch = another_batch.to(self.device)
-                another_batch_reduce = self.model(another_batch).debach()
+                another_batch_reduce = self.model(another_batch)
                 
             loss = self.loss_calculator(one_batch, another_batch, one_batch_reduce, another_batch_reduce)
             
             loss.backward()
             self.optimizer.step()
             self.scheduler.step()
+            
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
             
     
     def validate(self) -> None:

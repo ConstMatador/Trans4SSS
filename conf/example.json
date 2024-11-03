@@ -12,15 +12,15 @@
     "len_series": 960,
     "len_reduce": 60,
     "dim_series": 1,
-    "batch_size": 256,
+    "batch_size": 16,
     
     "data_size": 1000000,
-    "train_size": 200,
-    "val_size": 10,
+    "train_size": 20000,
+    "val_size": 1000,
 
     "embed_size": 16,
     "num_tokens": 10000,
-    "num_heads": 8,
+    "num_heads": 4,
     "num_layers": 6,
 
     "orth_regularizer": "srip",
