@@ -36,7 +36,7 @@ def getSample(conf: Configuration):
     
     loaded = []
     for index in train_samples_indices:
-        sequence = np.fromfile(data_path, dtype=np.float32, count=dim_series, offset=4 * dim_series * index)
+        sequence = np.fromfile(data_path, dtype = np.float32, count = len_series, offset = 4 * len_series * index)
         if not np.isnan(np.sum(sequence)):
             loaded.append(sequence)
 
@@ -48,7 +48,7 @@ def getSample(conf: Configuration):
     
     loaded = []
     for index in val_samples_indices:
-        sequence = np.fromfile(data_path, dtype=np.float32, count=dim_series, offset=4 * dim_series * index)
+        sequence = np.fromfile(data_path, dtype = np.float32, count = len_series, offset = 4 * len_series * index)
         if not np.isnan(np.sum(sequence)):
             loaded.append(sequence)
     

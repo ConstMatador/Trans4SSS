@@ -15,8 +15,8 @@
     "batch_size": 256,
     
     "data_size": 1000000,
-    "train_size": 200000,
-    "val_size": 10000,
+    "train_size": 200,
+    "val_size": 10,
 
     "embed_size": 16,
     "num_tokens": 10000,

@@ -5,6 +5,7 @@ from utils.sample import getSample, TSData
 from model.TStransformer import TStransformer
 from model.loss import ScaledL2Loss
 import logging
+import os
 
 
 class Experiment:
@@ -25,6 +26,10 @@ class Experiment:
             filename = self.log_path,
             filemode = "w"
         )
+        
+        with open('example.json', 'r') as infile:
+            config_data = json.load(infile)
+        logging.info("Configuration from example.json: %s", json.dumps(config_data, indent=4))
         
         logging.info(f"Experiment initialized with max epochs: {self.epoch_max} on device: {self.device}")
         
@@ -49,6 +54,8 @@ class Experiment:
         
     
     def train(self) -> None:
+        logging.info(f'epoch: {self.epoch}, start training')
+        
         for one_batch, another_batch in zip(self.train_loader, self.train_query_loader):
             self.optimizer.zero_grad()
             
@@ -86,10 +93,10 @@ class Experiment:
     def setup(self) -> None:
         train_samples, val_samples = getSample(self.conf)
         
-        self.train_loader = DataLoader(TSData(train_samples), batch_size=batch_size, shuffle=True)
-        self.train_query_loader = DataLoader(TSData(train_samples), batch_size=batch_size, shuffle=True)
-        self.val_loader = DataLoader(TSData(val_samples), batch_size=batch_size, shuffle=True)
-        self.val_query_loader = DataLoader(TSData(val_samples), batch_size=batch_size, shuffle=True)
+        self.train_loader = DataLoader(TSData(train_samples), batch_size = self.batch_size, shuffle = True)
+        self.train_query_loader = DataLoader(TSData(train_samples), batch_size = self.batch_size, shuffle = True)
+        self.val_loader = DataLoader(TSData(val_samples), batch_size = self.batch_size, shuffle = True)
+        self.val_query_loader = DataLoader(TSData(val_samples), batch_size = self.batch_size, shuffle = True)
         
         self.model = TStransformer(self.conf).to(self.device)
         
