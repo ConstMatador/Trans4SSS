@@ -41,7 +41,7 @@ class TStransformer(nn.Module):
         # x: (batch_size, len_series, dim_series)
         x = self.embedding(x)  # (batch_size, len_series, embed_size)
         x = self.positional_encoding(x.permute(1, 0, 2))  # (len_series, batch_size, embed_size)
-        x = self.transformer(x)  # (len_series, batch_size, embed_size)
+        x = self.transformer(x, x)  # (len_series, batch_size, embed_size)
         x = x.permute(2, 1, 0)  # (embed_size, batch_size, len_series)
         x = self.reduce(x)  # (embed_size, batch_size, len_reduce)
         x = x.permute(1, 2, 0)  # (batch_size, len_reduce, embed_size)

@@ -1,9 +1,14 @@
+import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
+from torch.optim import AdamW
+from torch.optim.lr_scheduler import LambdaLR
+
 from utils.conf import Configuration
 from utils.sample import getSample, TSData
 from model.TStransformer import TStransformer
 from model.loss import ScaledL2Loss
+
 import logging
 import os
 import json
@@ -89,6 +94,11 @@ class Experiment:
                 
         avg_error = torch.mean(torch.stack(errors)).item()
         logging.info(f'epoch: {self.epoch}, validate trans_err: {avg_error:.10f}')
+    
+    
+    def lr_lambda(self, step):
+            warmup_steps = 4000
+            return min((step + 1) / warmup_steps, 1.0 / (step + 1) ** 0.5)
         
     
     def setup(self) -> None:
@@ -110,12 +120,9 @@ class Experiment:
         
         self.loss_calculator = ScaledL2Loss(self.len_series, self.len_reduce).to(self.device)
         
-        self.optimizer = AdamW(self.model.parameters(), lr=1e-4, weight_decay=0.01)
+        self.optimizer = AdamW(self.model.parameters(), lr = 1e-4, weight_decay = 0.01)
         
-        def lr_lambda(step):
-            warmup_steps = 4000
-            return min((step + 1) / warmup_steps, 1.0 / (step + 1) ** 0.5)
-        self.scheduler = LambdaLR(optimizer, lr_lambda=lr_lambda)
+        self.scheduler = LambdaLR(self.optimizer, lr_lambda = self.lr_lambda)
         
         self.orth_regularizer = self.conf.getEntry('orth_regularizer')
         if self.orth_regularizer == 'srip':
@@ -151,3 +158,4 @@ class Experiment:
             srip_max = self.conf.getEntry('srip_max')
             srip_min = self.conf.getEntry('srip_min')
             self.srip_weight = srip_max - self.epoch * (srip_max - srip_min) / self.epoch_max
+            
