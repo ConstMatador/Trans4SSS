@@ -10,9 +10,10 @@
     "epoch_max": 100,
     "device": "cuda:0",
     "len_series": 960,
-    "len_embedding": 60,
+    "len_reduce": 60,
     "dim_series": 1,
     "batch_size": 256,
+    
     "data_size": 1000000,
     "train_size": 200000,
     "val_size": 10000,
@@ -20,5 +21,10 @@
     "embed_size": 16,
     "num_tokens": 10000,
     "num_heads": 8,
-    "num_layers": 6
+    "num_layers": 6,
+
+    "orth_regularizer": "srip",
+    "srip_mode": "linear",
+    "srip_max": 5e-4,
+    "srip_min": 0
 }

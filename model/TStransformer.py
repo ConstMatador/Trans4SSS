@@ -23,18 +23,18 @@ class TStransformer(nn.Module):
     def __init__(self, conf: Configuration):
         super(TStransformer, self).__init__()
         
-        self.dim_seires = conf.getEntry("dim_series")
+        self.dim_series = conf.getEntry("dim_series")
         self.len_series = conf.getEntry("len_series")
         self.len_reduce = conf.getEntry("len_reduce")
         self.embed_size = conf.getEntry("embed_size")
         self.num_heads = conf.getEntry("num_heads")
         self.num_layers = conf.getEntry("num_layers")
         
-        self.embedding = nn.Linear(self.dim_seires, self.embed_size)
+        self.embedding = nn.Linear(self.dim_series, self.embed_size)
         self.positional_encoding = PositionalEncoding(self.embed_size)
         self.transformer = nn.Transformer(self.embed_size, self.num_heads, self.num_layers)
         self.reduce = nn.Linear(self.len_series, self.len_reduce)
-        self.de_embedding = nn.Linear(self.embed_size, self.dim_seires)
+        self.de_embedding = nn.Linear(self.embed_size, self.dim_series)
 
     def forward(self, x):
         # x: (batch_size, len_series, dim_series)
