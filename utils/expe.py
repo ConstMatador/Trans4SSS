@@ -6,6 +6,7 @@ from model.TStransformer import TStransformer
 from model.loss import ScaledL2Loss
 import logging
 import os
+import json
 
 
 class Experiment:
@@ -27,7 +28,7 @@ class Experiment:
             filemode = "w"
         )
         
-        with open('example.json', 'r') as infile:
+        with open('conf/example.json', 'r') as infile:
             config_data = json.load(infile)
         logging.info("Configuration from example.json: %s", json.dumps(config_data, indent=4))
         
