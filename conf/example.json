@@ -1,11 +1,11 @@
 {
-    "data_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/Data/Mine/gist/gist.data",
-    "log_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/LLM4SSS/example/example.log",
-    "model_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/LLM4SSS/example/example.pth",
-    "train_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/LLM4SSS/example/data/train.data",
-    "val_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/LLM4SSS/example/data/val.data",
-    "train_indices_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/LLM4SSS/example/data/train_indices.data",
-    "val_indices_path": "/mnt/data/user_liangzhiyu/wangzhongzheng/LLM4SSS/example/data/val_indices.data",
+    "data_path": "../Data/Mine/gist/gist.data",
+    "log_path": "./example/example.log",
+    "model_path": "./example/example.pth",
+    "train_path": "./example/data/train.data",
+    "val_path": "./example/data/val.data",
+    "train_indices_path": "./example/data/train_indices.data",
+    "val_indices_path": "./example/data/val_indices.data",
 
     "epoch_max": 100,
     "device": "cuda:6",
@@ -15,8 +15,8 @@
     "batch_size": 16,
     
     "data_size": 1000000,
-    "train_size": 2000,
-    "val_size": 100,
+    "train_size": 20000,
+    "val_size": 1000,
 
     "embed_size": 16,
     "num_tokens": 10000,
