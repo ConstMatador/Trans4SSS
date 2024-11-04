@@ -104,8 +104,8 @@ class Experiment:
         for one_batch, another_batch in zip(self.train_loader, self.train_query_loader):
             self.optimizer.zero_grad()
             
-            one_batch = one_batch.to(self.device)
-            one_batch_reduce = self.model(one_batch)
+            one_batch = one_batch.to(self.device)   # (batch_size, dim_series, len_series)
+            one_batch_reduce = self.model(one_batch)    # (batch_size, dim_series, len_reduce)
             
             with torch.no_grad():
                 another_batch = another_batch.to(self.device)
@@ -126,13 +126,21 @@ class Experiment:
         
         with torch.no_grad():
             for one_batch, another_batch in zip(self.val_loader, self.val_query_loader):
-                one_batch = one_batch.to(self.device)  
+                one_batch = one_batch.to(self.device)
                 another_batch = another_batch.to(self.device)
                 one_batch_reduce = self.model(one_batch)
                 another_batch_reduce = self.model(another_batch)
                 
                 err = self.loss_calculator(one_batch, another_batch, one_batch_reduce, another_batch_reduce)
                 errors.append(err.cpu())
+                
+                # logging.info(
+                #     f"one_batch: {one_batch.cpu().numpy()}\n"
+                #     f"another_batch: {another_batch.cpu().numpy()}\n"
+                #     f"one_batch_reduce: {one_batch_reduce.cpu().numpy()}\n"
+                #     f"another_batch_reduce: {another_batch_reduce.cpu().numpy()}\n"
+                #     f"err: {err.cpu().item()}\n\n"
+                # )
                 
         avg_error = torch.mean(torch.stack(errors)).item()
         logging.info(f'epoch: {self.epoch}, validate trans_err: {avg_error:.10f}')

@@ -80,4 +80,7 @@ class TStransformer(nn.Module):
         x = x.reshape(-1, self.len_reduce, self.dim_series)  # (batch_size, len_reduce, dim_series)
         #print("12", x.shape)
         
+        x = x.permute(0, 2, 1)  # (batch_size, dim_series, len_reduce)
+        #print("13", x.shape)
+        
         return x

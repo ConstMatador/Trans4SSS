@@ -13,7 +13,12 @@ class ScaledL2Loss(nn.Module):
 
 
     def forward(self, one, another, one_reduce, another_reduce):
-        original_l2 = self.l2(squeeze(one), squeeze(another)) / self.scale_factor_original
-        reduce_l2 = self.l2(squeeze(one_reduce), squeeze(another_reduce)) / self.scale_factor_reduce
-        return self.l1(original_l2.view([1, -1]), reduce_l2.view([1, -1]))[0] / one.shape[0]
-    
+        one = one.reshape(-1, one.size(2))  # (batch_size * dim_series, len_series)
+        another = another.reshape(-1, another.size(2))  # (batch_size * dim_series, len_reduce)
+        one_reduce = one_reduce.reshape(-1, one_reduce.size(2)) # (batch_size * dim_series, len_series)
+        another_reduce = another_reduce.reshape(-1, another_reduce.size(2))  # (batch_size * dim_series, len_reduce)
+        
+        original_l2 = self.l2(one, another) / self.scale_factor_original    # (batch_size * dim_series)
+        reduce_l2 = self.l2(one_reduce, another_reduce) / self.scale_factor_reduce      # (batch_size * dim_series)
+
+        return self.l1(original_l2.reshape(1, -1), reduce_l2.reshape(1, -1))[0] / one.shape[0]      # (1, batch_size * dim_series) -> scalar

@@ -1,8 +1,8 @@
 {
     "data_path": "../Data/Mine/gist/gist.data",
     "log_path": "./example/log/example.log",
-    "model_epoch_pos": "./example/model/",
-    "model_path": "./example/model/example.pth",
+    "model_epoch_pos": "./example/models/",
+    "model_path": "./example/models/example.pth",
     "train_path": "./example/data/train.data",
     "val_path": "./example/data/val.data",
     "train_indices_path": "./example/data/train_indices.data",
@@ -26,6 +26,6 @@
 
     "orth_regularizer": "srip",
     "srip_mode": "linear",
-    "srip_max": 10e-4,
+    "srip_max": 5e-4,
     "srip_min": 0
 }
