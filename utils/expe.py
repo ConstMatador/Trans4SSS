@@ -21,6 +21,7 @@ class Experiment:
         self.epoch_max = self.conf.getEntry("epoch_max")
         self.log_path = conf.getEntry("log_path")
         self.model_path = self.conf.getEntry("model_path")
+        self.model_epoch_pos = self.conf.getEntry("model_epoch_pos")
         self.batch_size = self.conf.getEntry("batch_size")
         self.len_series = self.conf.getEntry("len_series")
         self.len_reduce = self.conf.getEntry("len_reduce")
@@ -51,6 +52,11 @@ class Experiment:
             
             self.train()
             self.validate()
+            
+            # Save the model every 5 epochs
+            if self.epoch % 5 == 0:
+                torch.save(self.model.state_dict(), f"{self.model_path}epoch{self.epoch}.pth")
+                logging.info(f"Model in epoch{self.epoch} saved successfully.")
 
         torch.save(self.model.state_dict(), self.model_path)
         logging.info("Model saved successfully.")
@@ -65,10 +71,6 @@ class Experiment:
         self.val_query_loader = DataLoader(TSData(val_samples), batch_size = self.batch_size, shuffle = True)
         
         self.model = TStransformer(self.conf).to(self.device)
-        
-        # if torch.cuda.device_count() > 1:
-        #     logging.info(f"Using {torch.cuda.device_count()} GPUs with DataParallel.")
-        #     self.model = nn.DataParallel(self.model)
         
         if os.path.exists(self.conf.getEntry("model_path")):
             logging.info("Model loading...")

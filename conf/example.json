@@ -1,7 +1,8 @@
 {
     "data_path": "../Data/Mine/gist/gist.data",
-    "log_path": "./example/example.log",
-    "model_path": "./example/example.pth",
+    "log_path": "./example/log/example.log",
+    "model_epoch_pos": "./example/log/",
+    "model_path": "./example/log/example.pth",
     "train_path": "./example/data/train.data",
     "val_path": "./example/data/val.data",
     "train_indices_path": "./example/data/train_indices.data",
@@ -18,7 +19,7 @@
     "train_size": 20000,
     "val_size": 1000,
 
-    "embed_size": 16,
+    "embed_size": 8,
     "num_tokens": 10000,
     "num_heads": 4,
     "num_layers": 6,
