@@ -92,6 +92,11 @@ class Experiment:
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
             
+        if torch.cuda.device_count() > 1:
+            selected_device = [2, 3, 4, 7]
+            logging.info(f"Using {len(selected_device)} GPUs")
+            self.model = torch.nn.DataParallel(self.model, device_ids=selected_device)
+            
     
     def train(self) -> None:
         logging.info(f'epoch: {self.epoch}, start training')

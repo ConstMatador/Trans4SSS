@@ -9,15 +9,15 @@
     "val_indices_path": "./example/data/val_indices.data",
 
     "epoch_max": 100,
-    "device": "cuda:5",
+    "device": "cuda:2",
     "len_series": 960,
     "len_reduce": 60,
     "dim_series": 1,
-    "batch_size": 16,
+    "batch_size": 64,
     
     "data_size": 1000000,
-    "train_size": 20000,
-    "val_size": 1000,
+    "train_size": 2000,
+    "val_size": 100,
 
     "embed_size": 16,
     "num_tokens": 10000,
@@ -26,6 +26,6 @@
 
     "orth_regularizer": "srip",
     "srip_mode": "linear",
-    "srip_max": 5e-4,
+    "srip_max": 10e-4,
     "srip_min": 0
 }

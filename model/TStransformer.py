@@ -19,7 +19,7 @@ class PositionalEncoding(nn.Module):
         self.register_buffer('pos_encoding', pos_encoding)
 
     def forward(self, x):
-        x = x + self.pos_encoding[:x.size(1), :].to(self.device)
+        x = x + self.pos_encoding[:x.size(1), :]
         return self.dropout(x)
     
 
@@ -65,7 +65,7 @@ class TStransformer(nn.Module):
         x = self.reduce(x)  # (embed_size*batch_size, len_reduce)
         #print("7", x.shape)
         
-        x = x.reshape(-1, self.batch_size, self.len_reduce)  # (embed_size, batch_size, len_reduce)
+        x = x.reshape(self.embed_size, -1, self.len_reduce)  # (embed_size, batch_size, len_reduce)
         #print("8", x.shape)
         
         x = x.permute(1, 2, 0)  # (batch_size, len_reduce, embed_size)
