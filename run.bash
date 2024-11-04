@@ -1,1 +1,1 @@
-nohup python LLM4SSSrun.py -C conf/example.json &
+python LLM4SSSrun.py -C conf/example.json

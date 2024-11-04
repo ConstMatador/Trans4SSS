@@ -55,8 +55,8 @@ class Experiment:
             
             # Save the model every 5 epochs
             if self.epoch % 5 == 0:
-                torch.save(self.model.state_dict(), f"{self.model_path}epoch{self.epoch}.pth")
-                logging.info(f"Model in epoch{self.epoch} saved successfully.")
+                torch.save(self.model.state_dict(), f"{self.model_epoch_pos}epoch{self.epoch}.pth")
+                logging.info(f"Model in epoch: {self.epoch} saved successfully.")
 
         torch.save(self.model.state_dict(), self.model_path)
         logging.info("Model saved successfully.")
