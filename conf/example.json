@@ -16,10 +16,10 @@
     "batch_size": 16,
     
     "data_size": 1000000,
-    "train_size": 2000,
-    "val_size": 100,
+    "train_size": 20000,
+    "val_size": 1000,
 
-    "embed_size": 8,
+    "embed_size": 16,
     "num_tokens": 10000,
     "num_heads": 4,
     "num_layers": 6,
