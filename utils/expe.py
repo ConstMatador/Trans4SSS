@@ -17,6 +17,7 @@ import json
 class Experiment:
     def __init__(self, conf: Configuration):
         self.conf = conf
+        self.model_type = self.conf.getEntry("model_type")
         self.device = self.conf.getEntry("device")
         self.epoch_max = self.conf.getEntry("epoch_max")
         self.log_path = conf.getEntry("log_path")
@@ -34,32 +35,10 @@ class Experiment:
             filemode = "w"
         )
         
-        with open('conf/example.json', 'r') as infile:
+        with open(self.conf.getEntry("conf_path"), 'r') as infile:
             config_data = json.load(infile)
         logging.info("Configuration from example.json: %s", json.dumps(config_data, indent=4))
         logging.info(f"Experiment initialized with max epochs: {self.epoch_max} on device: {self.device}")
-        
-        
-    def run(self) -> None:
-        self.setup()
-        
-        self.epoch = 0
-        while self.epoch < self.epoch_max:
-            if self.orth_regularizer == 'srip':
-                self.adjust_srip()
-            
-            self.epoch += 1
-            
-            self.train()
-            self.validate()
-            
-            # Save the model every 5 epochs
-            if self.epoch % 5 == 0:
-                torch.save(self.model.state_dict(), f"{self.model_epoch_pos}epoch{self.epoch}.pth")
-                logging.info(f"Model in epoch: {self.epoch} saved successfully.")
-
-        torch.save(self.model.state_dict(), self.model_path)
-        logging.info("Model saved successfully.")
         
     
     def setup(self) -> None:
@@ -70,7 +49,12 @@ class Experiment:
         self.val_loader = DataLoader(TSData(val_samples), batch_size = self.batch_size, shuffle = True)
         self.val_query_loader = DataLoader(TSData(val_samples), batch_size = self.batch_size, shuffle = True)
         
-        self.model = TStransformer(self.conf).to(self.device)
+        if self.model_type == "TStransformer":
+            self.model = TStransformer(self.conf).to(self.device)
+        elif self.model_type == "pretrained_TStransformer":
+            self.model = PretrainedTStransformer(self.conf).to(self.device)
+        else:
+            raise NotImplementedError("Model type not implemented")
         
         if os.path.exists(self.conf.getEntry("model_path")):
             logging.info("Model loading...")
@@ -93,9 +77,31 @@ class Experiment:
             torch.cuda.empty_cache()
             
         if torch.cuda.device_count() > 1:
-            selected_device = [2, 3, 4, 7]
+            selected_device = self.conf.getEntry("GPUs")
             logging.info(f"Using {len(selected_device)} GPUs")
             self.model = torch.nn.DataParallel(self.model, device_ids=selected_device)
+            
+            
+    def run(self) -> None:
+        self.setup()
+        
+        self.epoch = 0
+        while self.epoch < self.epoch_max:
+            if self.orth_regularizer == 'srip':
+                self.adjust_srip()
+            
+            self.epoch += 1
+            
+            self.train()
+            self.validate()
+            
+            # Save the model every 5 epochs
+            if self.epoch % 5 == 0:
+                torch.save(self.model.state_dict(), f"{self.model_epoch_pos}epoch{self.epoch}.pth")
+                logging.info(f"Model in epoch: {self.epoch} saved successfully.")
+
+        torch.save(self.model.state_dict(), self.model_path)
+        logging.info("Model saved successfully.")
             
     
     def train(self) -> None:
