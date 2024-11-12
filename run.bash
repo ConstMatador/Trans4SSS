@@ -1,1 +1,1 @@
-python LLM4SSSrun.py -C conf/example_trans.json
+python Trans4SSSrun.py -C conf/example_trans.json
