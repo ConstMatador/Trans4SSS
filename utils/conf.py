@@ -4,27 +4,32 @@ class Configuration:
     def __init__(self, confPath: str = ""):
         self.confPath = confPath
         self.defaultConf = {
+            "conf_path": "./conf/example_trans.json",
+
+            "model_type": "TStransformer",
+
             "data_path": "../Data/Mine/gist/gist.data",
-            "log_path": "./example/log/example.log",
-            "model_epoch_pos": "./example/model/",
-            "model_path": "./example/model/example.pth",
+            "log_path": "./example/log/example_trans.log",
+            "model_epoch_pos": "./example/models_trans/",
+            "model_path": "./example/models_trans/example_trans.pth",
             "train_path": "./example/data/train.data",
             "val_path": "./example/data/val.data",
             "train_indices_path": "./example/data/train_indices.data",
             "val_indices_path": "./example/data/val_indices.data",
 
             "epoch_max": 100,
-            "device": "cuda:5",
+            "device": "cuda:2",
+            "GPUs": [2, 3, 4, 7],
             "len_series": 960,
             "len_reduce": 60,
             "dim_series": 1,
-            "batch_size": 16,
+            "batch_size": 64,
             
             "data_size": 1000000,
-            "train_size": 2000,
-            "val_size": 100,
+            "train_size": 20000,
+            "val_size": 1000,
 
-            "embed_size": 8,
+            "embed_size": 16,
             "num_tokens": 10000,
             "num_heads": 4,
             "num_layers": 6,

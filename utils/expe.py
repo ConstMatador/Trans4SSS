@@ -86,6 +86,7 @@ class Experiment:
         self.setup()
         
         self.epoch = 0
+        self.validate()
         while self.epoch < self.epoch_max:
             if self.orth_regularizer == 'srip':
                 self.adjust_srip()

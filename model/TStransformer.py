@@ -19,7 +19,7 @@ class PositionalEncoding(nn.Module):
         self.register_buffer('pos_encoding', pos_encoding)
 
     def forward(self, x):
-        x = x + self.pos_encoding[:x.size(1), :]
+        x = x + self.pos_encoding[:x.size(1), :]    #pyright:ignore
         return self.dropout(x)
     
 
